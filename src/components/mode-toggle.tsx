@@ -17,7 +17,7 @@ export function ModeToggle() {
 
   if (!mounted) {
     return (
-      <div className="fixed right-4 top-4 size-10 rounded-full border border-border bg-background/50 backdrop-blur-md" />
+      <div className="relative size-10 rounded-full border border-border bg-background/50 backdrop-blur-md" />
     );
   }
 
@@ -52,7 +52,7 @@ export function ModeToggle() {
     <motion.button
       onClick={toggleTheme}
       style={{ viewTransitionName: "mode-toggle" } as React.CSSProperties}
-      className="fixed right-4 top-4 z-9999 flex size-10 items-center justify-center rounded-full border border-border bg-background/80 shadow-sm backdrop-blur-md transition-colors hover:bg-accent"
+      className="relative flex size-10 items-center justify-center rounded-full border border-border bg-background/80 shadow-sm backdrop-blur-md transition-colors hover:bg-accent"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
