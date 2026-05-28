@@ -2,21 +2,27 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { RiArrowRightLine, RiCommandFill, RiLockUnlockLine } from "@remixicon/react";
+import {
+  RiArrowRightLine,
+  RiCommandFill,
+  RiLockUnlockLine,
+} from "@remixicon/react";
 import * as React from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 // Warp timing constants (ms → s)
-const WARP_RINGS    = 0.3;   // rings start expanding
-const WARP_STREAKS  = 0.5;   // star streaks begin
-const WARP_CORE     = 0.9;   // central vortex blooms
-const WARP_FLASH    = 1.5;   // white/black flash fills screen
-const WARP_NAVIGATE = 2000;  // ms before router.push
+const WARP_RINGS = 0.3; // rings start expanding
+const WARP_STREAKS = 0.5; // star streaks begin
+const WARP_CORE = 0.9; // central vortex blooms
+const WARP_FLASH = 1.5; // white/black flash fills screen
+const WARP_NAVIGATE = 2000; // ms before router.push
 
 export function GatewayContent() {
   const router = useRouter();
-  const [particles, setParticles] = React.useState<{ x: string; y: string; duration: number }[]>([]);
-  const [mousePos, setMousePos]   = React.useState({ x: -1000, y: -1000 });
+  const [particles, setParticles] = React.useState<
+    { x: string; y: string; duration: number }[]
+  >([]);
+  const [mousePos, setMousePos] = React.useState({ x: -1000, y: -1000 });
   const [isWarping, setIsWarping] = React.useState(false);
 
   React.useEffect(() => {
@@ -39,19 +45,22 @@ export function GatewayContent() {
     setTimeout(() => router.push("/home"), WARP_NAVIGATE);
   };
 
-  const RING_SIZES = [40, 100, 180, 280, 400, 540, 700, 900, 1140, 1400, 1700, 2100];
+  const RING_SIZES = [
+    40, 100, 180, 280, 400, 540, 700, 900, 1140, 1400, 1700, 2100,
+  ];
 
   return (
     <div className="relative h-screen w-full bg-background flex flex-col items-center justify-center overflow-hidden font-sans transition-colors duration-500">
-
       {/* Mode Toggle */}
-      <div className="fixed top-4 right-4 sm:top-8 sm:right-8 z-[9999]">
+      <div className="fixed top-4 right-4 sm:top-8 sm:right-8 z-9999">
         <ModeToggle />
       </div>
 
       <div
         className="pointer-events-none fixed inset-0 z-30 opacity-25"
-        style={{ background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, var(--color-primary), transparent 40%)` }}
+        style={{
+          background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, var(--color-primary), transparent 40%)`,
+        }}
       />
 
       <div className="absolute inset-0 ambient-glow pointer-events-none opacity-50 dark:opacity-100" />
@@ -64,7 +73,11 @@ export function GatewayContent() {
             className="absolute size-0.5 bg-foreground/20 rounded-full"
             initial={{ x: p.x, y: p.y, opacity: 0 }}
             animate={{ y: [null, "-30px", "30px"], opacity: [0.1, 0.4, 0.1] }}
-            transition={{ duration: p.duration, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           />
         ))}
       </div>
@@ -97,7 +110,10 @@ export function GatewayContent() {
                   height: size,
                   // Uses foreground color for rings
                   border: `${Math.max(3 - i * 0.2, 0.5)}px solid oklch(from var(--foreground) l c h / ${0.6 - i * 0.04})`,
-                  boxShadow: i < 3 ? `0 0 ${20 - i * 5}px oklch(from var(--foreground) l c h / 0.2)` : "none",
+                  boxShadow:
+                    i < 3
+                      ? `0 0 ${20 - i * 5}px oklch(from var(--foreground) l c h / 0.2)`
+                      : "none",
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
@@ -107,7 +123,7 @@ export function GatewayContent() {
                 transition={{
                   duration: 1.3,
                   delay: WARP_RINGS + i * 0.035,
-                  ease: [0.2, 0.0, 0.8, 1.0], 
+                  ease: [0.2, 0.0, 0.8, 1.0],
                   times: [0, 0.1, 0.5, 1],
                 }}
               />
@@ -115,9 +131,9 @@ export function GatewayContent() {
 
             {/* Phase 2: Radial star streaks (Theme Aware) */}
             {[...Array(48)].map((_, i) => {
-              const angle   = (i / 48) * 360;
-              const length  = 40 + Math.random() * 80;
-              const delay   = WARP_STREAKS + (i % 8) * 0.04;
+              const angle = (i / 48) * 360;
+              const length = 40 + Math.random() * 80;
+              const delay = WARP_STREAKS + (i % 8) * 0.04;
               return (
                 <motion.div
                   key={`streak-${i}`}
@@ -142,14 +158,22 @@ export function GatewayContent() {
             {/* Phase 3: Inner glow core blooming */}
             <motion.div
               className="absolute rounded-full"
-              style={{ background: "radial-gradient(circle, oklch(from var(--foreground) l c h / 1) 0%, oklch(from var(--foreground) l c h / 0.2) 50%, transparent 100%)" }}
+              style={{
+                background:
+                  "radial-gradient(circle, oklch(from var(--foreground) l c h / 1) 0%, oklch(from var(--foreground) l c h / 0.2) 50%, transparent 100%)",
+              }}
               initial={{ width: 0, height: 0, opacity: 0 }}
               animate={{
-                width:   [0, 20, 80, 200],
-                height:  [0, 20, 80, 200],
-                opacity: [0, 1,  1,  0],
+                width: [0, 20, 80, 200],
+                height: [0, 20, 80, 200],
+                opacity: [0, 1, 1, 0],
               }}
-              transition={{ duration: 0.9, delay: WARP_CORE, ease: [0.16, 1, 0.3, 1], times: [0, 0.15, 0.6, 1] }}
+              transition={{
+                duration: 0.9,
+                delay: WARP_CORE,
+                ease: [0.16, 1, 0.3, 1],
+                times: [0, 0.15, 0.6, 1],
+              }}
             />
 
             {/* Phase 4: Final overexposure (Inverted for Light Mode) */}
@@ -157,16 +181,20 @@ export function GatewayContent() {
               className="absolute inset-0 bg-foreground"
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0, 0, 0.3, 1] }}
-              transition={{ duration: WARP_FLASH + 0.3, ease: "easeIn", times: [0, 0.5, 0.75, 0.88, 1] }}
+              transition={{
+                duration: WARP_FLASH + 0.3,
+                ease: "easeIn",
+                times: [0, 0.5, 0.75, 0.88, 1],
+              }}
             />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.main 
-        animate={{ 
+      <motion.main
+        animate={{
           filter: isWarping ? "blur(20px) scale(0.9)" : "blur(0px) scale(1)",
-          opacity: isWarping ? 0 : 1 
+          opacity: isWarping ? 0 : 1,
         }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         className="relative z-10 flex flex-col items-center gap-12 px-4"
@@ -229,14 +257,18 @@ export function GatewayContent() {
           </div>
           <div className="flex gap-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="size-1 rounded-full bg-muted-foreground/20" />
+              <div
+                key={i}
+                className="size-1 rounded-full bg-muted-foreground/20"
+              />
             ))}
           </div>
         </motion.div>
       </motion.main>
 
       <div className="absolute bottom-8 right-8 text-[10px] text-muted-foreground/30 font-mono hidden sm:block text-right">
-        PROTOCOL: V1.0.0-PRO<br />
+        PROTOCOL: V1.0.0-PRO
+        <br />
         STATUS: READY_FOR_BOOT
       </div>
 
